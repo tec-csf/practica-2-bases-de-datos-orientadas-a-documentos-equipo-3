@@ -1,0 +1,27 @@
+[
+    //Liga
+    {
+        "_id":"string",
+        "pais":"string"
+    },
+
+    //Club
+    {
+        "_id": "string",
+        "presidente":"string",
+        "Notitulos":"int",
+        "Liga_id":"string"
+
+    },
+
+    //Jugador
+    {
+    
+        "nombre": "string",
+        "paisDeOrigen": "string",
+        "edad": "int",
+        "posicion": "string",
+        "club_id": "string"
+
+    }
+]
