@@ -9,7 +9,7 @@
     {
         "_id": "string",
         "presidente":"string",
-        "Notitulos":"int",
+        "noTitulos":"int",
         "Liga_id":"string"
 
     },
