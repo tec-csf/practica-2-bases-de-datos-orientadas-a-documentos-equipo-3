@@ -98,3 +98,22 @@ exit  # Para salir del contenedor
 
 sudo docker run  --name mongo-router -d --net mongo-sh mongo  mongos --configdb rsConfig/mongo-config1:27019,mongo-config2:27019,mongo-config3:27019
 
+docker exec -it mongo-router mongo
+
+sh.addShard( "rsShard1/mongo-shard11:27018")
+sh.addShard( "rsShard1/mongo-shard12:27018")
+sh.addShard( "rsShard1/mongo-shard13:27018")
+
+use practica
+db.createCollection("liga")
+db.createCollection("club")
+db.createCollection("jugador")
+
+sh.enableSharding( "practica" )
+db.liga.createIndex( { _id : 1 } )
+db.club.createIndex( { _id : 1 } )
+db.jugador.createIndex( { nombre : 1 } )
+
+sh.shardCollection( "shdb.liga", { "_id" : 1 } )
+sh.shardCollection( "shdb.club", { "_id" : 1 } )
+sh.shardCollection( "shdb.jugador", { "nombre" : 1 } )
