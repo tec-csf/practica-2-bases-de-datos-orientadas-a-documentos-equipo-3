@@ -17,7 +17,7 @@
     //Jugador
     {
     
-        "nombre": "string",
+        "_id": "string",
         "paisDeOrigen": "string",
         "edad": "int",
         "posicion": "string",
