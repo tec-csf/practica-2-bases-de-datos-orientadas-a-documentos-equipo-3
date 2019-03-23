@@ -6,23 +6,62 @@ from bson.json_util import dumps
 
 app = FlaskAPI(__name__)
 
-@app.route("/", methods=['GET'])
-def hello():
-    return "Hello World!"
-
-
-@app.route("/liga", methods=['GET'])
-def liga():
+@app.route("/jugador", methods=['GET'])
+def jugador():
     mongo_uri = "mongodb://mongo-router:27017"
 
     client = MongoClient(mongo_uri)
     db = client.practica
-    collection = db.liga
+    collection = db.jugador
 
     pipeline = [
-        {"$unwind":"$products"},
-        {"$sortByCount":"$products.product"},
-        {"$limit":5}
+        {
+            "$group" :{
+            _id:"$paisDeOrigen",
+            Total:{"$sum":1}, 
+            }
+        },
+        {
+            "$project":{
+                _id:0,
+                Pais:"$_id",
+                Total:1
+            }
+
+        },
+        {
+            "$sort":{
+                _id:1
+            }
+        }
+    ]
+
+    cursor = collection.aggregate(pipeline)
+
+    return jsonify(dumps(cursor))
+
+@app.route("/jugador", methods=['GET'])
+def jugador1():
+    mongo_uri = "mongodb://mongo-router:27017"
+
+    client = MongoClient(mongo_uri)
+    db = client.practica
+    collection = db.jugador
+
+    pipeline = [
+        {
+            "$match":{
+                posicion:"medio"
+            }
+
+        },
+        {
+            "$group":{
+                _id:"$club_id",
+                edadPromedio:{"$avg":"$edad"}
+            }
+        },
+        { "$limit" : 10 }
     ]
 
     cursor = collection.aggregate(pipeline)
@@ -31,26 +70,31 @@ def liga():
 
 @app.route("/club", methods=['GET'])
 def club():
-    mongo_uri = "mongodb://mongo-router:27017"
+     mongo_uri = "mongodb://mongo-router:27017"
 
     client = MongoClient(mongo_uri)
     db = client.practica
     collection = db.club
 
     pipeline = [
-        {"$match":{"name":{"$regex":"^A"}}},
-        {"$project":{"_id":0,"name":1,"credit":1}},
-        {"$sort": {"credit":-1}},
-        {"$limit":5}
+        {
+            "$group":{
+                _id:"$Liga_id",
+                max:{"$max":"$noTitulos"},
+                club:{"$addToSet":"$_id"}
+            }
+        },
+        {
+            "$sort":{
+                _id:1
+            }
+        },
+        { "$limit" : 10 }
     ]
 
     cursor = collection.aggregate(pipeline)
 
     return jsonify(dumps(cursor))
-
-@app.route("/jugador", methods=['GET'])
-def jugador():
-     return "Hello World!"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

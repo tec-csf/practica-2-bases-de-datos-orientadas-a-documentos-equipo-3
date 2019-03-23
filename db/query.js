@@ -56,7 +56,7 @@ db.club.aggregate([
             _id:1
         }
     },
-    { $limit : 10 },
+    { $limit : 10 }
     
    
 ])
