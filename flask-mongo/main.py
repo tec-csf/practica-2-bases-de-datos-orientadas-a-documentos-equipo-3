@@ -1,4 +1,4 @@
-from flask import request, url_for, jsonify,Flask
+from flask import request, url_for, jsonify
 from flask_api import FlaskAPI, status, exceptions
 from pymongo import MongoClient
 from bson.json_util import dumps
@@ -6,7 +6,7 @@ from bson.json_util import dumps
 
 app = FlaskAPI(__name__)
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def hello():
     return "Hello World!"
 
@@ -50,37 +50,7 @@ def club():
 
 @app.route("/jugador", methods=['GET'])
 def jugador():
-    mongo_uri = "mongodb://mongo-router:27017"
-
-    client = MongoClient(mongo_uri)
-    db = client.practica
-    collection = db.jugador
-
-    pipeline = [
-       {
-        "$group" :{
-          "_id":"$paisDeOrigen",
-          "Total":{"$sum":1}, 
-        }
-    },
-    {
-        "$project":{
-            "_id":0,
-            "Pais":"$_id",
-            "Total":1
-        }
-
-    },
-    {
-        "$sort":{
-            "_id":1
-        }
-    }
-    ]
-
-    cursor = collection.aggregate(pipeline)
-
-    return jsonify(dumps(cursor))
+     return "Hello World!"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

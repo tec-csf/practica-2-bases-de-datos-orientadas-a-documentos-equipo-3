@@ -1,8 +1,8 @@
 # Pasar los archivos al contenedor
 
-sudo docker cp liga.json a21b8af0ff9d:/liga.json
-sudo docker cp club.json a21b8af0ff9d:/club.json
-sudo docker cp jugador.json a21b8af0ff9d:/jugador.json
+sudo docker cp liga.json mongo-router:/liga.json
+sudo docker cp club.json mongo-router:/club.json
+sudo docker cp jugador.json mongo-router:/jugador.json
 
 
 #Conectarse a la terminal del contenedor

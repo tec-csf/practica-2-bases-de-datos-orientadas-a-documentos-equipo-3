@@ -96,7 +96,21 @@ exit  # Para salir del contenedor
 # ------ Iniciar el Router -------
 # --------------------------------
 
-sudo docker run  --name mongo-router -d --net mongo-sh mongo  mongos --configdb rsConfig/mongo-config1:27019,mongo-config2:27019,mongo-config3:27019
+sudo docker run  --name mongo-router -d --net mongo-sh mongo  mongos --configdb rsConfig/mongo-config1:27019,mongo-config2:27019,mongo-config3:27019 -p 27017:27017 --bind_ip_all
+
+sudo docker cp liga.json mongo-router:/liga.json
+sudo docker cp club.json mongo-router:/club.json
+sudo docker cp jugador.json mongo-router:/jugador.json
+
+#Conectarse a la terminal del contenedor
+
+docker exec -it mongo-router bash
+
+# Cargar los archivos a las colecciones
+
+mongoimport --db practica --collection liga --file liga.json --jsonArray
+mongoimport --db practica --collection club --file club.json --jsonArray
+mongoimport --db practica --collection jugador --file jugador.json --jsonArray
 
 docker exec -it mongo-router mongo
 
