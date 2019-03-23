@@ -6,13 +6,13 @@ from bson.json_util import dumps
 
 app = FlaskAPI(__name__)
 
-@app.route("/carts", methods=['GET'])
-def list_carts():
+@app.route("/liga", methods=['GET'])
+def liga():
     mongo_uri = "mongodb://mongo-router:27017"
 
     client = MongoClient(mongo_uri)
     db = client.shdb
-    collection = db.carts
+    collection = db.liga
 
     pipeline = [
         {"$unwind":"$products"},
@@ -24,13 +24,13 @@ def list_carts():
 
     return jsonify(dumps(cursor))
 
-@app.route("/users", methods=['GET'])
-def list_users():
+@app.route("/club", methods=['GET'])
+def club():
     mongo_uri = "mongodb://mongo-router:27017"
 
     client = MongoClient(mongo_uri)
     db = client.shdb
-    collection = db.users
+    collection = db.club
 
     pipeline = [
         {"$match":{"name":{"$regex":"^A"}}},
@@ -43,19 +43,34 @@ def list_users():
 
     return jsonify(dumps(cursor))
 
-@app.route("/products", methods=['GET'])
-def list_products():
+@app.route("/jugador", methods=['GET'])
+def jugador():
     mongo_uri = "mongodb://mongo-router:27017"
 
     client = MongoClient(mongo_uri)
     db = client.shdb
-    collection = db.products
+    collection = db.jugador
 
     pipeline = [
-        {"$match":{"company":{"$regex":"^B"}}},
-        {"$project":{"_id":0,"name":1,"company":1,"price":1}},
-        {"$sort":{"price":1}},
-        {"$limit":2}
+       {
+        "$group" :{
+          "_id":"$paisDeOrigen",
+          "Total":{"$sum":1}, 
+        }
+    },
+    {
+        "$project":{
+            "_id":0,
+            "Pais":"$_id",
+            "Total":1
+        }
+
+    },
+    {
+        "$sort":{
+            "_id":1
+        }
+    }
     ]
 
     cursor = collection.aggregate(pipeline)
