@@ -40,7 +40,7 @@ def jugador():
 
     return jsonify(dumps(cursor))
 
-@app.route("/jugador", methods=['GET'])
+@app.route("/jugador1", methods=['GET'])
 def jugador1():
     mongo_uri = "mongodb://mongo-router:27017"
 
