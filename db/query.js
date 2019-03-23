@@ -1,4 +1,4 @@
-//El numero de jugadores que hay por pais de origen, ordenados ascendentemente por pais.
+//El numero de jugadores que hay por pais de origen, ordenados ascendentemente por el nombre del pais.
 db.jugador.aggregate([
 
     {
@@ -41,21 +41,22 @@ db.jugador.aggregate([
 
 ])
 
+//El club con más titulos de cada liga, ordenados ascendentemente por el nombre de la liga
 db.club.aggregate([
-    
+
     {
         $group:{
             _id:"$Liga_id",
-            max:{$max:"$noTitulos"}
+            max:{$max:"$noTitulos"},
+            club:{$addToSet:"$_id"}
         }
     },
     {
-        $project:{
-            _id:1,
-            max:1
+        $sort:{
+            _id:1
         }
-
     },
-    { $limit : 10 }
+    { $limit : 10 },
+    
    
 ])
